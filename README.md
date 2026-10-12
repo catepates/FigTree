@@ -19,9 +19,22 @@ Website for ceramic artist Cate Pates (Fig Tree Studio, Lower Hutt, Wellington),
 
 ## Next steps
 
-1. Create the Google Sheet (tabs **Workshops**, **Galleries**, **Exhibitions**, **Media**, **Studio**), share it with Cate as an editor and set *Anyone with the link → Viewer*; then connect the site to it.
-2. Optional: create a Netlify build hook and save it in GitHub as `NETLIFY_BUILD_HOOK` so ORA photos can be refreshed by hand (see below).
-3. Confirm with Cate: design choice, workshop details, Wellington Artspace listing, and ask ORA about using their photos.
+### Before launch (aim: before the Lower Hutt Art Trail, 17–18 October)
+
+- [ ] Netlify → Environment variables: `SHEET_ID` also set for **Production**.
+- [ ] Netlify → Forms → Form notifications: email to clpates@hotmail.com.
+- [ ] Cate's quick look at the preview site (invite her to the Netlify team, or use a shared password).
+- [ ] Launch: remove the `[context.production]` and noindex blocks in `netlify.toml`, publish `main`, check every page in a private window.
+- [ ] Put the daily Vault check (`.github/workflows/check-vault.yml`) on `main` and run its test once.
+
+### After launch
+
+- [ ] **Gallery sources as plug-ins.** Today ORA and The Vault are handled by name in several places (build scripts, `/api/vault`, `site/js/ora.js`, the Gallery page sections, `where-to-buy.js`, the status page, the daily check). Restructure so each gallery is one file in a `galleries/` folder that only fetches its pieces (title, price, size, photo, link), picked by a **Source** column in the Galleries tab; the build, hourly live check, Gallery page sections, homepage counts, status page and daily check all loop over the sources. Adding a gallery then = one file + one Sheet value. Test against the current ORA and Vault listings so nothing changes for visitors.
+- [ ] Photos of the kiln and work table for a "From the studio" strip.
+- [ ] Cate's own Stripe account (public name "Cate Pates") before selling studio pieces or prints; decide on posting and update the delivery terms.
+- [ ] Prints: print and post herself, or print-on-demand.
+- [ ] Domain email (hello@catepates.co.nz) when there's time; steps in the migration guide.
+- [ ] Move accounts into Cate's name (migration guide).
 
 ### Potter's stamp (maker's mark): where to get it made
 
