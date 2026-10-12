@@ -1,9 +1,10 @@
 // Homepage "Step inside the gallery" list: only the places that have Cate's work right now.
 //   From Cate's studio / Prints: available rows in the Studio tab of the Sheet
-//   ORA Gallery: ORA's live feed (falls back to the list from the last build)
-//   The Vault: /api/vault (falls back to the list from the last build)
-// Each line shows how many pieces are there. If nothing is available anywhere, the list
-// hides and the text points to past work instead.
+//   Galleries: rows of the Galleries tab with "Has Cate's work now" = yes, in sheet order,
+//     each linking to its Website. ORA and The Vault (matched by name) also get a live
+//     piece count, from ORA's feed and /api/vault (else the lists from the last build),
+//     and drop off by themselves when that count is 0.
+// If nothing is available anywhere, the list hides and the text points to past work.
 
 import { sheetRows, isYes } from './sheet.js';
 import { keyOf, stockOf } from './studio.js';
@@ -48,19 +49,30 @@ const pieces = (n) => `${n} piece${n === 1 ? '' : 's'}`;
 
 function item(href, name, detail) {
   const li = document.createElement('li');
-  const a = Object.assign(document.createElement('a'), { href });
+  const a = Object.assign(document.createElement(href ? 'a' : 'div'), href ? { href } : {});
   a.append(Object.assign(document.createElement('strong'), { textContent: name }),
-    Object.assign(document.createElement('span'), { textContent: `${detail} →` }));
+    Object.assign(document.createElement('span'), { textContent: href ? `${detail} →` : detail }));
   li.append(a);
   return li;
 }
 
 if (list) {
-  const [{ studio, prints }, ora, vault] = await Promise.all([studioCounts(), oraCount(), vaultCount()]);
+  const [{ studio, prints }, galleries, ora, vault] = await Promise.all([
+    studioCounts(), sheetRows('Galleries'), oraCount(), vaultCount(),
+  ]);
   const items = [];
   if (studio) items.push(item('/work.html#studio', "From Cate's studio", `${pieces(studio)} · buy direct`));
-  if (ora) items.push(item('/work.html#ora', 'ORA Gallery', `${pieces(ora)} · 23 Allen Street, Wellington`));
-  if (vault) items.push(item('/work.html#vault', 'The Vault', `${pieces(vault)} · 2 Plimmer Steps, Wellington`));
+  for (const g of galleries || []) {
+    if (!g.name || !isYes(g.has_cate_s_work_now)) continue;
+    const website = /^https?:\/\//.test(g.website || '') ? g.website : '';
+    if (/\bora\b/i.test(g.name)) {
+      if (ora) items.push(item('/work.html#ora', g.name, [pieces(ora), g.place].filter(Boolean).join(' · ')));
+    } else if (/vault/i.test(g.name)) {
+      if (vault) items.push(item('/work.html#vault', g.name, [pieces(vault), g.place].filter(Boolean).join(' · ')));
+    } else {
+      items.push(item(website, g.name, g.place || 'See the gallery'));
+    }
+  }
   if (prints) items.push(item('/work.html#prints', 'Prints', `${prints} available · buy direct`));
   list.replaceChildren(...items);
   list.hidden = items.length === 0;

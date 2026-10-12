@@ -103,7 +103,7 @@ Until Cate is ready, catepates.co.nz (the production deploy, built from `main`) 
 
 ## Homepage "where to buy" list
 
-`site/js/where-to-buy.js` builds the homepage list from what's actually available: studio pieces and prints (Studio tab, unsold), ORA (live feed, else the built list) and The Vault (`/api/vault`, else the built list), each with a piece count. Empty sources are left out; with nothing anywhere the list hides and the text points to past work. Nothing on the site promises NZ-wide delivery until Cate decides on posting.
+`site/js/where-to-buy.js` builds the homepage list from what's actually available: studio pieces and prints (Studio tab, unsold), then every Galleries-tab row with **Has Cate's work now** = yes, linking to its website. ORA and The Vault (matched by name) also get a live piece count (ORA's feed / `/api/vault`, else the built lists) and drop off when it's 0, so a new gallery needs only a Sheet row, no code. Empty sources are left out; with nothing anywhere the list hides and the text points to past work. Nothing on the site promises NZ-wide delivery until Cate decides on posting.
 
 ## Announcements
 
