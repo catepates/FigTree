@@ -214,3 +214,18 @@ blockquote.pull .attribution { font-size: 13px; letter-spacing: .14em; text-tran
   .announce-text { flex-direction: column; gap: 2px; }
   .announce-text strong { font-size: 20px; }
 }
+
+/* Process page: alternating photo / text steps */
+.process { display: flex; flex-direction: column; gap: 96px; }
+.process-step { display: flex; flex-wrap: wrap; align-items: center; gap: 40px 64px; }
+.process-step:nth-child(even) { flex-direction: row-reverse; }
+.process-photo { flex: 1 1 360px; width: 100%; max-width: 520px; aspect-ratio: 4 / 5; object-fit: cover; }
+.process-photo.is-pending { display: flex; align-items: center; justify-content: center; padding: 32px; text-align: center; background: var(--soft); border: 1px dashed var(--line); color: var(--muted); font-size: 15px; }
+.process-text { flex: 1 1 380px; gap: 16px; }
+.process-quote { margin: 0; font-family: var(--serif); font-style: italic; font-size: 24px; line-height: 1.4; }
+.draft-note { margin: 0; padding: 10px 14px; background: #FFF6D6; border-left: 3px solid #D9A400; font-size: 14px; color: #5A4500; max-width: 60ch; }
+@media (max-width: 720px) {
+  .process { gap: 64px; }
+  .process-step:nth-child(even) { flex-direction: row; }
+  .process-photo { max-width: none; }
+}
