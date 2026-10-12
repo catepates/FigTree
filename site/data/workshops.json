@@ -1,24 +1,35 @@
 [
   {
-    "date": "2026-10-24",
-    "time": "1:30–4pm",
-    "name": "Blue tile workshop",
-    "venue": "[Venue], [suburb]",
-    "price": "",
-    "blurb": "Model a hare, birds or leaves in relief on a clay tile, finished in a deep sea-blue glaze.",
-    "register": "",
+    "date": "2026-10-15",
+    "time": "7–9:30pm",
+    "name": "Clay vase workshop",
+    "venue": "Alfred Memelink Artspace Gallery, Petone",
+    "price": "$130",
+    "blurb": "Hand-build a vase about 15 × 12 cm with texture and pressed shapes. Cate fires and glazes it in your choice of colour, watertight for flowers. All materials and two firings included. Upstairs, no lift.",
+    "register": "https://events.humanitix.com/clay-vase-workshop",
     "details": "",
-    "draft": true
+    "soldOut": false
   },
   {
-    "date": "2026-11-14",
-    "time": "2–4:30pm",
-    "name": "Wall art workshop",
-    "venue": "Maungaraki Community Centre, 135 Dowse Drive",
-    "price": "",
-    "blurb": "Make a fox, bird or heart for the wall, pressed with flowers and leaves and glazed in rich green.",
-    "register": "",
+    "date": "2026-10-24",
+    "time": "2–4pm",
+    "name": "Creative cup clay workshop",
+    "venue": "Maungaraki Community Centre",
+    "price": "$95",
+    "blurb": "Hand-build and decorate a cup about 8 × 9 cm from templates. Cate glazes and fires it, ready about four weeks later. Materials, glaze and two firings included.",
+    "register": "https://events.humanitix.com/creative-cup-clay-workshop-24-october",
     "details": "",
-    "draft": true
+    "soldOut": false
+  },
+  {
+    "date": "2026-11-07",
+    "time": "4–6:30pm",
+    "name": "Gin and Clay: magical blue tile workshop",
+    "venue": "The Bond Store, Paraparaumu Beach",
+    "price": "$120",
+    "blurb": "Make a clay tile, fired and glazed in vibrant blue, with a tasting tray of three gins from The Bond Store. Materials, glaze and two firings included.",
+    "register": "https://events.humanitix.com/gin-and-clay-magical-blue-tile-workshop",
+    "details": "",
+    "soldOut": false
   }
 ]
