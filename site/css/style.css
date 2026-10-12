@@ -169,6 +169,7 @@ blockquote.pull .attribution { font-size: 13px; letter-spacing: .14em; text-tran
 .hero-figure { flex: 1 1 380px; max-width: 520px; min-width: 0; margin: 0 auto; gap: 12px; }
 .hero-figure img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; background: var(--soft); }
 .hero-figure figcaption { text-align: center; }
+.where-to-buy[hidden] { display: none; }
 .where-to-buy { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
 .where-to-buy li { border-top: 1px solid var(--line); font-size: 15px; }
 .where-to-buy a { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 16px; padding: 12px 0; text-decoration: none; color: var(--ink); }

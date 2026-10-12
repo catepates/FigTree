@@ -101,6 +101,10 @@ Until Cate is ready, catepates.co.nz (the production deploy, built from `main`) 
 
 **To launch:** delete the `[context.production]` block (and the noindex header block) in `netlify.toml`, then publish `main`.
 
+## Homepage "where to buy" list
+
+`site/js/where-to-buy.js` builds the homepage list from what's actually available: studio pieces and prints (Studio tab, unsold), ORA (live feed, else the built list) and The Vault (`/api/vault`, else the built list), each with a piece count. Empty sources are left out; with nothing anywhere the list hides and the text points to past work. Nothing on the site promises NZ-wide delivery until Cate decides on posting.
+
 ## Announcements
 
 `site/js/announcements.js` (on the home, Gallery, Workshops, About and Media pages) reads the **Announcements** tab and shows each current row as a slim band under the header: Heading, Details, Label, Button text, Link, Start, End, Pages (`All pages` or home page only), Show. Rows outside Start–End (NZ time) are skipped, so an announcement disappears by itself after its End date.
