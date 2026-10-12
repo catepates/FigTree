@@ -101,6 +101,10 @@ Until Cate is ready, catepates.co.nz (the production deploy, built from `main`) 
 
 **To launch:** delete the `[context.production]` block (and the noindex header block) in `netlify.toml`, then publish `main`.
 
+## Announcements
+
+`site/js/announcements.js` (on the home, Gallery, Workshops, About and Media pages) reads the **Announcements** tab and shows each current row as a slim band under the header: Heading, Details, Label, Button text, Link, Start, End, Pages (`All pages` or home page only), Show. Rows outside Start–End (NZ time) are skipped, so an announcement disappears by itself after its End date.
+
 ## Media recordings in Google Drive
 
 On the Media page (`site/js/media.js`), an entry whose link is a Google Drive file gets a *Listen* (or *Watch*) button that opens Drive's own player (`/file/d/<id>/preview`) inside the entry, so visitors stay on the site. Other links open as before. The Drive file must be shared *Anyone with the link*.

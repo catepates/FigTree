@@ -42,3 +42,4 @@ if (block) {
     set('all', more > 0 ? `${more} more date${more === 1 ? '' : 's'}` : 'All workshop details');
   }
 }
+

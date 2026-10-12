@@ -12,7 +12,7 @@
 // Only the tabs listed here can be read through this endpoint.
 
 const DEFAULT_SHEET_ID = '';
-const TABS = ['Workshops', 'Studio', 'Galleries', 'Exhibitions', 'Media'];
+const TABS = ['Announcements', 'Workshops', 'Studio', 'Galleries', 'Exhibitions', 'Media'];
 
 export function keyOf(label) {
   return String(label).trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');

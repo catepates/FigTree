@@ -7,7 +7,7 @@ import { parseGviz } from './sheet.mjs';
 import { salesCount } from './studio-sold.mjs';
 import { ARTIST_PAGE, fetchText, listPieces } from '../../scripts/vault-parse.mjs';
 
-const TABS = ['Workshops', 'Studio', 'Galleries', 'Exhibitions', 'Media'];
+const TABS = ['Announcements', 'Workshops', 'Studio', 'Galleries', 'Exhibitions', 'Media'];
 
 export default async (req) => {
   const sheetId = process.env.SHEET_ID || '';
