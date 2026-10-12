@@ -1,4 +1,6 @@
-// A quick health check for Dom: is the Google Sheet connected, and is Stripe set up?
+// A health check for Dom and Cate: everything the site needs (scripts/health-checks.mjs),
+// plus details about the Sheet, Stripe and The Vault. Read by /status.html and by the daily
+// alert email (.github/workflows/check-site.yml).
 // Shows counts and yes/no only — never any secret values or buyers' details.
 //   GET /api/status
 
@@ -6,11 +8,18 @@ import { getStore } from '@netlify/blobs';
 import { parseGviz } from './sheet.mjs';
 import { salesCount } from './studio-sold.mjs';
 import { ARTIST_PAGE, fetchText, listPieces } from '../../scripts/vault-parse.mjs';
+import { runChecks } from '../../scripts/health-checks.mjs';
 
 const TABS = ['Announcements', 'Workshops', 'Studio', 'Galleries', 'Exhibitions', 'Media'];
 
 export default async (req) => {
   const sheetId = process.env.SHEET_ID || '';
+  const origin = new URL(req.url).origin;
+  const checks = runChecks({
+    siteUrl: new URL(origin).hostname.endsWith('.netlify.app') ? undefined : origin,
+    sheetId,
+    stripeSecretSet: Boolean(process.env.STRIPE_WEBHOOK_SECRET),
+  });
   const sheet = { configured: Boolean(sheetId), tabs: {} };
   if (sheetId) {
     await Promise.all(TABS.map(async (tab) => {
@@ -76,7 +85,7 @@ export default async (req) => {
   }
 
   return Response.json(
-    { sheet, vault, stripe: { webhookSecretSet: Boolean(process.env.STRIPE_WEBHOOK_SECRET), soldPieces: sold } },
+    { checks: await checks, sheet, vault, stripe: { webhookSecretSet: Boolean(process.env.STRIPE_WEBHOOK_SECRET), soldPieces: sold } },
     { headers: { 'Cache-Control': 'no-store' } },
   );
 };

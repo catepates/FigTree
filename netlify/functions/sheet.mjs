@@ -55,9 +55,19 @@ export function cellValue(cell) {
 }
 
 // The gviz endpoint wraps JSON in a JavaScript call: google.visualization.Query.setResponse({...});
-export function parseGviz(text) {
+function gvizTable(text) {
   const json = JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1));
   if (json.status === 'error') throw new Error(json.errors?.[0]?.detailed_message || 'sheet error');
+  return json.table;
+}
+
+// The tab's column keys, e.g. ["date", "time", "workshop", …], even when it has no rows.
+export function gvizColumns(text) {
+  return gvizTable(text).cols.map((c) => keyOf(c.label || c.id));
+}
+
+export function parseGviz(text) {
+  const json = { table: gvizTable(text) };
   const keys = json.table.cols.map((c) => keyOf(c.label || c.id));
   return json.table.rows
     .map((r) => Object.fromEntries(keys.map((k, i) => [k, cellValue(r.c?.[i])])))

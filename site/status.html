@@ -12,7 +12,7 @@
 <body>
 <main class="wrap section" style="max-width: 760px">
   <h1 class="h2">Website status</h1>
-  <p class="lede" style="max-width: none; margin: 8px 0 32px">Checks the connection to the Google Sheet, Stripe and The Vault. Refresh to check again.</p>
+  <p class="lede" style="max-width: none; margin: 8px 0 32px">Checks everything the website needs: its pages, the Google Sheet, booking and payment links, media links and the galleries' lists. Refresh to check again. The same check runs every morning and emails Cate and Dom if something breaks.</p>
   <div class="terms" data-status><p>Checking…</p></div>
 </main>
 <script type="module">
@@ -22,6 +22,14 @@ const esc = (v) => String(v ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<
 try {
   const s = await (await fetch('/api/status', { cache: 'no-store' })).json();
   const rows = [];
+  const checks = s.checks || [];
+  const fails = checks.filter((c) => c.level === 'fail');
+  const warns = checks.filter((c) => c.level === 'warn');
+  rows.push(`<p style="font-size: 20px">${fails.length ? `❌ ${fails.length} thing${fails.length === 1 ? ' needs' : 's need'} fixing` : '✅ Everything the site needs is working'}${warns.length ? ` · ⚠️ ${warns.length} to look at` : ''}</p>`);
+  const icon = { ok: '✅', warn: '⚠️', fail: '❌' };
+  const line = (c) => `<li>${icon[c.level]} <strong>${esc(c.area)}: ${esc(c.name)}</strong>: ${esc(c.detail)}${c.fix ? `<br><em>What to do:</em> ${esc(c.fix)}` : ''}</li>`;
+  if (fails.length || warns.length) rows.push('<ul>' + [...fails, ...warns].map(line).join('') + '</ul>');
+  rows.push(`<details><summary>All ${checks.length} checks</summary><ul>${checks.map(line).join('')}</ul></details>`);
   rows.push(`<h2 class="h3">Google Sheet</h2>`);
   if (!s.sheet.configured) {
     rows.push(`<p>${tick(false)} Not connected. Add <code>SHEET_ID</code> in Netlify → Environment variables, then retry this branch's deploy.</p>`);
@@ -31,7 +39,7 @@ try {
       : `<li>${tick(false)} <strong>${tab}</strong>: ${t.error}</li>`).join('') + '</ul>');
   }
   rows.push(`<h2 class="h3">Stripe</h2><ul>`);
-  rows.push(`<li>${tick(s.stripe.webhookSecretSet)} Webhook signing secret ${s.stripe.webhookSecretSet ? 'is set' : 'is not set (add <code>STRIPE_WEBHOOK_SECRET</code> in Netlify)'}</li>`);
+  rows.push(`<li>${s.stripe.webhookSecretSet ? '✅' : '⚠️'} Webhook signing secret ${s.stripe.webhookSecretSet ? 'is set' : 'is not set (only needed once pieces are for sale: add <code>STRIPE_WEBHOOK_SECRET</code> in Netlify)'}</li>`);
   const sold = s.stripe.soldPieces;
   rows.push(`<li>Pieces Stripe has reported as sold: ${Array.isArray(sold) ? (sold.length ? sold.join(', ') : 'none yet') : sold}</li></ul>`);
   const v = s.vault || {};

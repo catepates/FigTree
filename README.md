@@ -21,11 +21,12 @@ Website for ceramic artist Cate Pates (Fig Tree Studio, Lower Hutt, Wellington),
 
 ### Before launch (aim: before the Lower Hutt Art Trail, 17–18 October)
 
-- [ ] Netlify → Environment variables: `SHEET_ID` also set for **Production**.
+- [x] Netlify → Environment variables: `SHEET_ID` set for all contexts, Production included (checked 12 Oct).
+- [ ] Netlify → Site configuration → Visitor access: Netlify team login is required on **all** deploys, so the public gets a login page on catepates.co.nz. Change it to non-production deploys only at launch.
 - [ ] Netlify → Forms → Form notifications: email to clpates@hotmail.com.
 - [ ] Cate's quick look at the preview site (invite her to the Netlify team, or use a shared password).
 - [ ] Launch: remove the `[context.production]` and noindex blocks in `netlify.toml`, publish `main`, check every page in a private window.
-- [ ] Put the daily Vault check (`.github/workflows/check-vault.yml`) on `main` and run its test once.
+- [ ] Daily website check: add the `ALERT_EMAIL_USER` / `ALERT_EMAIL_PASSWORD` secrets in GitHub, then after launch run *Check the website* once with *Pretend it failed* (and once without) to test the emails.
 
 ### After launch
 
@@ -126,9 +127,14 @@ Until Cate is ready, catepates.co.nz (the production deploy, built from `main`) 
 
 On the Media page (`site/js/media.js`), an entry whose link is a Google Drive file gets a *Listen* (or *Watch*) button that opens Drive's own player (`/file/d/<id>/preview`) inside the entry, so visitors stay on the site. Other links open as before. The Drive file must be shared *Anyone with the link*.
 
-## Email alert if The Vault stops updating
+## Daily website check and email alerts
 
-`.github/workflows/check-vault.yml` runs every morning on GitHub (free, no Netlify credits). It reads Cate's page on The Vault with the same code the site uses (`.github/scripts/check-vault.mjs` → `scripts/vault-parse.mjs`). If no pieces can be read, it opens a GitHub issue labelled `vault-check` that mentions @domdonald52, so GitHub emails Dom; it closes the issue by itself once the check passes again. To test the email: Actions → *Check The Vault* → Run workflow → tick *Pretend it failed* (then run it again unticked to close the test issue). Scheduled checks only run from `main`. GitHub pauses scheduled checks in a public repository after 60 days with no commits and emails a warning first; re-enable it under Actions if that happens.
+`scripts/health-checks.mjs` lists everything the site needs and checks it: the main pages load, `/api/sheet` and `/api/vault` answer, the https certificate isn't about to expire, every Sheet tab can be read and still has the column headings the site uses, each upcoming workshop has a readable date and a working Humanitix link, current announcement links, media links (a Drive recording must be shared publicly), studio photos and Stripe payment links, gallery websites and exhibition links, ORA's and The Vault's lists of Cate's pieces, and Stripe's webhook secret once pieces are on sale. Each result is *ok*, *warn* (worth a look) or *fail* (visitors would notice, or bookings or sales would be lost), with a plain-words "What to do".
+
+- `/status.html` (via `/api/status`) shows the results live. Page, function and certificate checks run only on catepates.co.nz, not on Netlify preview addresses (those need a Netlify login).
+- `.github/workflows/check-site.yml` runs every morning on GitHub (free, no Netlify credits). It reads `/api/status` on the live site (`.github/scripts/check-site.mjs`). When something fails, it emails **clpates@hotmail.com and dom.donald@gmail.com** once, emails again if the problems change, sends a reminder after 7 days, and sends an "all fixed" email when everything passes. Warnings alone never send an email. It also keeps a GitHub issue labelled `site-health` open, mentioning @domdonald52, as the record and as a backup alert.
+- **Email setup (once):** create a Google app password for the Gmail account that sends the alerts (myaccount.google.com/apppasswords, needs 2-Step Verification). Then add two repository secrets in GitHub → Settings → Secrets and variables → Actions: `ALERT_EMAIL_USER` (that Gmail address) and `ALERT_EMAIL_PASSWORD` (the app password). Without them only the GitHub issue is created.
+- To test: Actions → *Check the website* → Run workflow → tick *Pretend it failed*; run it again unticked for the "all fixed" email. Scheduled checks only run from `main`. GitHub pauses scheduled checks in a public repository after 60 days with no commits and emails a warning first; re-enable it under Actions if that happens.
 
 ## Gallery type filter
 
