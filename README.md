@@ -35,6 +35,7 @@ Website for ceramic artist Cate Pates (Fig Tree Studio, Lower Hutt, Wellington),
 - [ ] "How Cate works" process page (`site/process.html`, drafted and hidden): add Thursday's studio photos and Cate's answers, then add it to the menu.
 - [ ] Cate's own Stripe account (public name "Cate Pates") before selling studio pieces or prints; decide on posting and update the delivery terms.
 - [ ] Prints: print and post herself, or print-on-demand.
+- [ ] **New logo (Cate, after her first workshop).** Cate wants to refine the fig tree mark. It's `site/img/fig-tree-mark.svg`, used in the site header, as the browser-tab icon and on `coming-soon/`; the social-share image `site/img/og-image.jpg` doesn't include it. A photo or scan of her drawing is enough to redraw it as SVG.
 - [ ] Domain email (hello@catepates.co.nz) when there's time; steps in the migration guide.
 - [ ] **Carry out the migration plan (Cate and Dom), before about 13 November 2026.** Move the GitHub repository, Netlify project, domain and Google files into Cate's accounts, following the migration guide. Netlify: Dom's team was upgraded to **Pro on 13 Oct 2026** (one month, paid by Dom) so Cate could join it as a team member and check the preview before launch; Pro renews monthly until cancelled. Once the project has moved to Cate's own team, put Dom's team back on the free plan (Team settings → Billing).
 
