@@ -23,10 +23,11 @@ Website for ceramic artist Cate Pates (Fig Tree Studio, Lower Hutt, Wellington),
 
 - [x] Netlify → Environment variables: `SHEET_ID` set for all contexts, Production included (checked 12 Oct).
 - [ ] Netlify → Site configuration → Visitor access: Netlify team login is required on **all** deploys, so the public gets a login page on catepates.co.nz. Change it to non-production deploys only at launch.
-- [ ] Netlify → Forms → Form notifications: email to clpates@hotmail.com.
+- [x] Netlify → Forms → Form notifications: email to Cate (catepatesnz@gmail.com) and Dom.
 - [ ] Cate's quick look at the preview site (invite her to the Netlify team, or use a shared password).
 - [ ] Launch: remove the `[context.production]` and noindex blocks in `netlify.toml`, publish `main`, check every page in a private window.
-- [ ] Daily website check: add the `ALERT_EMAIL_USER` / `ALERT_EMAIL_PASSWORD` secrets in GitHub, then after launch run *Check the website* once with *Pretend it failed* (and once without) to test the emails.
+- [x] Daily website check secrets (`ALERT_EMAIL_USER` / `ALERT_EMAIL_PASSWORD`) added in GitHub.
+- [ ] After launch run *Check the website* once with *Pretend it failed* (and once without) to test the emails.
 
 ### After launch
 
