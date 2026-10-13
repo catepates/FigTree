@@ -24,7 +24,7 @@ Website for ceramic artist Cate Pates (Fig Tree Studio, Lower Hutt, Wellington),
 - [x] Netlify → Environment variables: `SHEET_ID` set for all contexts, Production included (checked 12 Oct).
 - [ ] Netlify → Site configuration → Visitor access: Netlify team login is required on **all** deploys, so the public gets a login page on catepates.co.nz. Change it to non-production deploys only at launch.
 - [x] Netlify → Forms → Form notifications: email to Cate (catepatesnz@gmail.com) and Dom.
-- [ ] Cate's quick look at the preview site (invite her to the Netlify team, or use a shared password).
+- [ ] Cate's look at the preview site: invited to the Netlify team (Pro, 13 Oct) at catepatesnz@gmail.com. Launch waits for her approval.
 - [ ] Launch: remove the `[context.production]` and noindex blocks in `netlify.toml`, publish `main`, check every page in a private window.
 - [x] Daily website check secrets (`ALERT_EMAIL_USER` / `ALERT_EMAIL_PASSWORD`) added in GitHub.
 - [ ] After launch run *Check the website* once with *Pretend it failed* (and once without) to test the emails.
@@ -32,11 +32,11 @@ Website for ceramic artist Cate Pates (Fig Tree Studio, Lower Hutt, Wellington),
 ### After launch
 
 - [ ] **Gallery sources as plug-ins.** Today ORA and The Vault are handled by name in several places (build scripts, `/api/vault`, `site/js/ora.js`, the Gallery page sections, `where-to-buy.js`, the status page, the daily check). Restructure so each gallery is one file in a `galleries/` folder that only fetches its pieces (title, price, size, photo, link), picked by a **Source** column in the Galleries tab; the build, hourly live check, Gallery page sections, homepage counts, status page and daily check all loop over the sources. Adding a gallery then = one file + one Sheet value. Test against the current ORA and Vault listings so nothing changes for visitors.
-- [ ] Photos of the kiln and work table for a "From the studio" strip.
+- [ ] "How Cate works" process page (`site/process.html`, drafted and hidden): add Thursday's studio photos and Cate's answers, then add it to the menu.
 - [ ] Cate's own Stripe account (public name "Cate Pates") before selling studio pieces or prints; decide on posting and update the delivery terms.
 - [ ] Prints: print and post herself, or print-on-demand.
 - [ ] Domain email (hello@catepates.co.nz) when there's time; steps in the migration guide.
-- [ ] Move accounts into Cate's name (migration guide).
+- [ ] **Carry out the migration plan (Cate and Dom), before about 13 November 2026.** Move the GitHub repository, Netlify project, domain and Google files into Cate's accounts, following the migration guide. Netlify: Dom's team was upgraded to **Pro on 13 Oct 2026** (one month, paid by Dom) so Cate could join it as a team member and check the preview before launch; Pro renews monthly until cancelled. Once the project has moved to Cate's own team, put Dom's team back on the free plan (Team settings → Billing).
 
 ### Potter's stamp (maker's mark): where to get it made
 
@@ -67,6 +67,13 @@ The site uses the "Gallery" design (clean and white, Cormorant Garamond + Instru
 | About + contact form | `site/about.html` (form handled by Netlify Forms; thank-you page `site/thanks.html`) |
 
 Shared styles are in `site/css/style.css`. The site is kept out of search engines until launch (`site/robots.txt` and the header in `netlify.toml`) — remove both to go public.
+
+## Project history
+
+- **6 Oct 2026, 2:42pm:** Dom starts building the site with Claude, after sitting down with Cate at the MyHost site builder. Website building had been on Cate's to-do list for months.
+- **7 Oct:** first version in GitHub (a holding page with Cate's ORA pieces); Netlify account created; full site built (home, gallery, workshops, about).
+- **7–12 Oct:** Google Sheet control (workshops, studio, galleries, exhibitions, media, announcements); live ORA and The Vault listings; terms checked against NZ consumer law with Cate's edits; podcast player; coming-soon page on catepates.co.nz.
+- **13 Oct:** daily website health check with email alerts; Netlify Pro so Cate can see the preview; ready to launch on Cate's approval, one week after starting (64 saved versions).
 
 ## The Google Sheet
 
