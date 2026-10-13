@@ -39,7 +39,7 @@ jobs:
       - name: Check the site and send alerts
         env:
           SITE_URL: https://catepates.co.nz
-          ALERT_TO: clpates@hotmail.com, dom.donald@gmail.com
+          ALERT_TO: catepatesnz@gmail.com, dom.donald@gmail.com
           ALERT_EMAIL_USER: ${{ secrets.ALERT_EMAIL_USER }}
           ALERT_EMAIL_PASSWORD: ${{ secrets.ALERT_EMAIL_PASSWORD }}
           GITHUB_TOKEN: ${{ github.token }}
