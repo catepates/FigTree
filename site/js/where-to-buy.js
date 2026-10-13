@@ -5,6 +5,10 @@
 //     piece count, from ORA's feed and /api/vault (else the lists from the last build),
 //     and drop off by themselves when that count is 0.
 // If nothing is available anywhere, the list hides and the text points to past work.
+//
+// The three photos beside the list are pieces for sale at those galleries right now (a
+// creature, a vessel and a house where possible, picked afresh on each visit), using the
+// framed photos from the last build. With nothing for sale they stay as past work.
 
 import { sheetRows, isYes } from './sheet.js';
 import { keyOf, stockOf } from './studio.js';
@@ -33,16 +37,48 @@ async function studioCounts() {
   return { studio: available.length - prints, prints };
 }
 
-async function oraCount() {
-  const feed = await json('https://oragallery.co.nz/collections/cate-pates/products.json?limit=250');
-  if (feed?.products) return feed.products.filter((p) => p.variants?.[0]?.available && p.images?.length).length;
-  return (await json('/data/ora.json'))?.pieces?.length || 0;
+// Pieces for sale now: the live list where it can be read (its count is the gallery's count),
+// and the built pieces still in it, which have the framed photos.
+async function galleryStock(live, builtUrl) {
+  const built = (await json(builtUrl))?.pieces || [];
+  if (!live) return { count: built.length, photos: built };
+  const handles = new Set(live);
+  return { count: live.length, photos: built.filter((p) => handles.has(p.handle)) };
 }
 
-async function vaultCount() {
+async function oraStock() {
+  const feed = await json('https://oragallery.co.nz/collections/cate-pates/products.json?limit=250');
+  const live = feed?.products?.filter((p) => p.variants?.[0]?.available && p.images?.length).map((p) => p.handle);
+  return galleryStock(live, '/data/ora.json');
+}
+
+async function vaultStock() {
   const live = await json('/api/vault');
-  if (live?.found) return live.pieces.length;
-  return (await json('/data/vault.json'))?.pieces?.length || 0;
+  return galleryStock(live?.found ? live.pieces.map((p) => p.handle) : null, '/data/vault.json');
+}
+
+// Up to three photos: one creature, one vessel, one house if there are any, then the rest.
+function pickPhotos(pool) {
+  const shuffled = [...pool].sort(() => Math.random() - 0.5);
+  const picked = [];
+  for (const type of ['creature', 'vessel', 'house']) {
+    const p = shuffled.find((x) => x.type === type && !picked.includes(x));
+    if (p) picked.push(p);
+  }
+  for (const p of shuffled) if (picked.length < 3 && !picked.includes(p)) picked.push(p);
+  return picked;
+}
+
+function showPhotos(pool) {
+  const collage = document.querySelector('[data-gallery-collage]');
+  const picked = pickPhotos(pool);
+  if (!collage || picked.length < 3) return;
+  collage.href = '/work.html';
+  collage.setAttribute('aria-label', "See Cate's work for sale now");
+  collage.querySelectorAll('img').forEach((img, i) => {
+    img.src = `/${picked[i].image}`;
+    img.alt = picked[i].alt || picked[i].title;
+  });
 }
 
 const pieces = (n) => `${n} piece${n === 1 ? '' : 's'}`;
@@ -57,24 +93,30 @@ function item(href, name, detail) {
 }
 
 if (list) {
-  const [{ studio, prints }, galleries, ora, vault] = await Promise.all([
-    studioCounts(), sheetRows('Galleries'), oraCount(), vaultCount(),
+  const [{ studio, prints }, galleries, oraNow, vaultNow] = await Promise.all([
+    studioCounts(), sheetRows('Galleries'), oraStock(), vaultStock(),
   ]);
+  const ora = oraNow.count;
+  const vault = vaultNow.count;
   const items = [];
+  const photos = [];
   if (studio) items.push(item('/work.html#studio', "From Cate's studio", `${pieces(studio)} · buy direct`));
   for (const g of galleries || []) {
     if (!g.name || !isYes(g.has_cate_s_work_now)) continue;
     const website = /^https?:\/\//.test(g.website || '') ? g.website : '';
     if (/\bora\b/i.test(g.name)) {
       if (ora) items.push(item('/work.html#ora', g.name, [pieces(ora), g.place].filter(Boolean).join(' · ')));
+      if (ora) photos.push(...oraNow.photos);
     } else if (/vault/i.test(g.name)) {
       if (vault) items.push(item('/work.html#vault', g.name, [pieces(vault), g.place].filter(Boolean).join(' · ')));
+      if (vault) photos.push(...vaultNow.photos);
     } else {
       items.push(item(website, g.name, g.place || 'See the gallery'));
     }
   }
   if (prints) items.push(item('/work.html#prints', 'Prints', `${prints} available · buy direct`));
   list.replaceChildren(...items);
+  showPhotos(photos);
   list.hidden = items.length === 0;
   if (lede) {
     lede.textContent = items.length
