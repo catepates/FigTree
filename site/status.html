@@ -12,7 +12,7 @@
 <body>
 <main class="wrap section" style="max-width: 760px">
   <h1 class="h2">Website status</h1>
-  <p class="lede" style="max-width: none; margin: 8px 0 32px">Checks everything the website needs: its pages, the Google Sheet, booking and payment links, media links and the galleries' lists. Refresh to check again. The same check runs every morning and emails Cate and Dom if something breaks.</p>
+  <p class="lede" style="max-width: none; margin: 8px 0 32px">Checks everything the website needs: its pages, the Google Sheet, booking and payment links, media links and the ORA and Vault lists. Refresh to check again. The same check runs every morning and emails Cate and Dom if something breaks.</p>
   <p style="margin: -16px 0 28px"><a class="text-link" href="https://figtreestudio.goatcounter.com">Visitor stats (GoatCounter) →</a></p>
   <div class="terms" data-status><p>Checking…</p></div>
 </main>
@@ -43,8 +43,23 @@ try {
   rows.push(`<li>${s.stripe.webhookSecretSet ? '✅' : '⚠️'} Webhook signing secret ${s.stripe.webhookSecretSet ? 'is set' : 'is not set (only needed once pieces are for sale: add <code>STRIPE_WEBHOOK_SECRET</code> in Netlify)'}</li>`);
   const sold = s.stripe.soldPieces;
   rows.push(`<li>Pieces Stripe has reported as sold: ${Array.isArray(sold) ? (sold.length ? sold.join(', ') : 'none yet') : sold}</li></ul>`);
+  const when = (t) => esc(new Date(t).toLocaleString('en-NZ', { dateStyle: 'medium', timeStyle: 'short' }));
+  const o = s.ora || {};
+  rows.push(`<h2 class="h3">ORA Gallery</h2><p style="margin-top:0;color:#666">Read live from ORA's shop by every visitor's browser, so sold pieces drop off straight away.</p><ul>`);
+  if (!o.ok) {
+    rows.push(`<li>${tick(false)} Couldn't read ORA's shop feed (${esc(o.error)}). The Gallery page shows the list from the last publish.</li>`);
+  } else {
+    rows.push(`<li>${tick(true)} ORA's feed can be read: ${o.listed} piece${o.listed === 1 ? '' : 's'} for sale now (checked just now).</li>`);
+  }
+  if (o.builtAt) {
+    rows.push(`<li>Photos last prepared at the publish on ${when(o.builtAt)} (${o.built} piece${o.built === 1 ? '' : 's'}).`
+      + (o.goneSinceBuild?.length ? ` Sold or removed since: ${o.goneSinceBuild.map(esc).join(', ')}.` : '')
+      + (o.newSinceBuild?.length ? ` New since (shown with ORA's own photo until the next publish): ${o.newSinceBuild.map(esc).join(', ')}.` : '')
+      + '</li>');
+  }
+  rows.push('</ul>');
   const v = s.vault || {};
-  rows.push(`<h2 class="h3">The Vault</h2><ul>`);
+  rows.push(`<h2 class="h3">The Vault</h2><p style="margin-top:0;color:#666">The Vault has no product feed, so the site reads Cate's page on their website about once an hour and shares that copy with every visitor.</p><ul>`);
   if (!v.ok) {
     rows.push(`<li>${tick(false)} Couldn't reach The Vault's website (${esc(v.error)}). The Gallery page keeps showing the list from the last build.</li>`);
   } else if (v.listed === 0) {
@@ -52,8 +67,9 @@ try {
   } else {
     rows.push(`<li>${tick(true)} The Vault's page can be read: ${v.listed} piece${v.listed === 1 ? '' : 's'} listed now.</li>`);
   }
+  if (v.cachedCheckedAt) rows.push(`<li>Visitors' copy last read from The Vault: ${when(v.cachedCheckedAt)}.</li>`);
   if (v.builtAt) {
-    rows.push(`<li>Last build (${esc(new Date(v.builtAt).toLocaleString('en-NZ'))}) had ${v.built} piece${v.built === 1 ? '' : 's'}.`
+    rows.push(`<li>Photos last prepared at the publish on ${when(v.builtAt)} (${v.built} piece${v.built === 1 ? '' : 's'}).`
       + (v.goneSinceBuild?.length ? ` Gone since (sold or removed, hidden on the site within the hour): ${v.goneSinceBuild.map(esc).join(', ')}.` : '')
       + (v.newSinceBuild?.length ? ` New since (shown with The Vault's own photo until the next build): ${v.newSinceBuild.map(esc).join(', ')}.` : '')
       + '</li>');

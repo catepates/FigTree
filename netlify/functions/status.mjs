@@ -84,8 +84,40 @@ export default async (req) => {
     vault.error = err.message;
   }
 
+  // When the hourly Vault copy that visitors get was last read (Netlify caches /api/vault).
+  try {
+    const cached = await (await fetch(new URL('/api/vault', req.url), { signal: AbortSignal.timeout(8000) })).json();
+    if (cached?.checked) vault.cachedCheckedAt = cached.checked;
+  } catch {
+    // not essential
+  }
+
+  // ORA: its shop feed is read live by every visitor's browser; compare it with the last build.
+  const ora = {};
+  try {
+    const res = await fetch('https://oragallery.co.nz/collections/cate-pates/products.json?limit=250', { headers: { 'User-Agent': 'catepates.co.nz status' }, signal: AbortSignal.timeout(10000) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const live = (await res.json()).products.filter((p) => p.variants?.some((v) => v.available) && p.images?.length);
+    ora.ok = true;
+    ora.listed = live.length;
+    try {
+      const built = await (await fetch(new URL('/data/ora.json', req.url))).json();
+      const builtHandles = new Set(built.pieces.map((p) => p.handle));
+      const liveHandles = new Set(live.map((p) => p.handle));
+      ora.builtAt = built.updated;
+      ora.built = built.pieces.length;
+      ora.goneSinceBuild = built.pieces.filter((p) => !liveHandles.has(p.handle)).map((p) => p.title);
+      ora.newSinceBuild = live.filter((p) => !builtHandles.has(p.handle)).map((p) => p.title);
+    } catch {
+      // the built list is optional here
+    }
+  } catch (err) {
+    ora.ok = false;
+    ora.error = err.message;
+  }
+
   return Response.json(
-    { checks: await checks, sheet, vault, stripe: { webhookSecretSet: Boolean(process.env.STRIPE_WEBHOOK_SECRET), soldPieces: sold } },
+    { checks: await checks, sheet, ora, vault, stripe: { webhookSecretSet: Boolean(process.env.STRIPE_WEBHOOK_SECRET), soldPieces: sold } },
     { headers: { 'Cache-Control': 'no-store' } },
   );
 };
