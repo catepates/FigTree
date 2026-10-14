@@ -145,6 +145,10 @@ On the Media page (`site/js/media.js`), an entry whose link is a Google Drive fi
 - **Email setup (once):** create a Google app password for the Gmail account that sends the alerts (myaccount.google.com/apppasswords, needs 2-Step Verification). Then add two repository secrets in GitHub → Settings → Secrets and variables → Actions: `ALERT_EMAIL_USER` (that Gmail address) and `ALERT_EMAIL_PASSWORD` (the app password). Without them only the GitHub issue is created.
 - To test: Actions → *Check the website* → Run workflow → tick *Pretend it failed*; run it again unticked for the "all fixed" email. Scheduled checks only run from `main`. GitHub pauses scheduled checks in a public repository after 60 days with no commits and emails a warning first; re-enable it under Actions if that happens.
 
+## Visitor stats
+
+`site/js/stats.js` loads [GoatCounter](https://figtreestudio.goatcounter.com) (account "figtreestudio", Dom's sign-up) on every public page, but only on catepates.co.nz, so preview and local visits aren't counted. No cookies; the privacy section of the terms says what it records. The status page links to the stats. The printed QR codes add `?ref=card` (business cards), `?ref=table` (workshop table card) and `?ref=handout` (take-away cards), which GoatCounter shows under *Referrers*, so you can see how many people scanned each. Netlify's own *Observability* (raw requests, bots included, 7 days on Pro) is still there for troubleshooting.
+
 ## Gallery type filter
 
 `site/js/gallery-filter.js` adds *All · Houses · Vessels · Creatures* buttons to the Gallery page; a *Prints* button appears once any piece is a print. Each card's type comes from `site/js/piece-type.js`: the Studio tab's optional **Type** column first, then words in the title, then ORA's own product tags (e.g. "Vase", "House", "animal"). Pieces that fit none (a tile, wall hearts) show under *All* only. Studio rows typed Print are drawn in their own **Prints** section (`#prints`) after all the ceramics, not under *From Cate's studio*. The choice is kept in the address, e.g. `/work.html?type=vessel`, so it can be linked to.
