@@ -1,2 +1,4 @@
 User-agent: *
-Disallow: /
+Disallow: /status.html
+Disallow: /process.html
+Disallow: /api/

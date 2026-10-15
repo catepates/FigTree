@@ -25,7 +25,7 @@ Website for ceramic artist Cate Pates (Fig Tree Studio, Lower Hutt, Wellington),
 - [x] Netlify visitor access (13 Oct): preview links need the shared password (non-production only); catepates.co.nz is public but shows only the coming-soon page until launch.
 - [x] Netlify → Forms → Form notifications: email to Cate (catepatesnz@gmail.com) and Dom.
 - [ ] Cate's look at the preview site: with the shared preview password (the team invite didn't work for her). Launch waits for her approval.
-- [ ] Launch: remove the `[context.production]` and noindex blocks in `netlify.toml`, publish `main`, check every page in a private window.
+- [x] Launched 15 Oct 2026 ("Cate Approves Website Launch"): coming-soon and noindex settings removed, `main` published.
 - [x] Daily website check secrets (`ALERT_EMAIL_USER` / `ALERT_EMAIL_PASSWORD`) added in GitHub.
 - [ ] After launch run *Check the website* once with *Pretend it failed* (and once without) to test the emails.
 
