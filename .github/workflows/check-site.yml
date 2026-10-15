@@ -1,0 +1,48 @@
+# Checks the live website every morning: its pages, the Google Sheet, booking, payment and
+# media links, the galleries' lists and the security certificate (scripts/health-checks.mjs,
+# via the site's /api/status). If something breaks it emails Cate and Dom once (and again
+# when it's fixed), and opens a GitHub issue. Uses no Netlify build credits.
+#
+# Email setup (once): create a Google app password for the sending Gmail account
+# (myaccount.google.com/apppasswords; needs 2-Step Verification), then in GitHub:
+# Settings → Secrets and variables → Actions → New repository secret:
+#   ALERT_EMAIL_USER      the Gmail address it sends from
+#   ALERT_EMAIL_PASSWORD  the 16-letter app password
+# Without them, only the GitHub issue (which GitHub emails to Dom) is created.
+#
+# To test the email: Actions → Check the website → Run workflow → tick "Pretend it failed",
+# then run it again without the tick to get the "all fixed" email.
+name: Check the website
+
+on:
+  schedule:
+    - cron: '17 19 * * *'   # every day, about 8am New Zealand time
+  workflow_dispatch:
+    inputs:
+      test:
+        description: Pretend it failed (to test the email)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check the site and send alerts
+        env:
+          SITE_URL: https://catepates.co.nz
+          ALERT_TO: catepatesnz@gmail.com, dom.donald@gmail.com
+          ALERT_EMAIL_USER: ${{ secrets.ALERT_EMAIL_USER }}
+          ALERT_EMAIL_PASSWORD: ${{ secrets.ALERT_EMAIL_PASSWORD }}
+          GITHUB_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          TEST: ${{ inputs.test }}
+        run: node .github/scripts/check-site.mjs

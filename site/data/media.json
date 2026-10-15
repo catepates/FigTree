@@ -1,34 +1,10 @@
 [
   {
-    "date": "2026-09",
+    "date": "2026-08-01",
     "type": "Podcast",
-    "title": "Placeholder: Talking clay, foxes and storytelling",
-    "outlet": "Example Podcast · Episode 12",
-    "blurb": "Placeholder text. A short line about what the episode covers, e.g. Cate talks about hand-building, her glazes and the creatures in her work.",
-    "link": "#"
-  },
-  {
-    "date": "2026-06",
-    "type": "Article",
-    "title": "Placeholder: Meet the makers of the Lower Hutt Art Trail",
-    "outlet": "Example Magazine",
-    "blurb": "Placeholder text. One or two sentences summarising the article.",
-    "link": "#"
-  },
-  {
-    "date": "2026-03",
-    "type": "Radio",
-    "title": "Placeholder: Interview on local arts radio",
-    "outlet": "Example FM",
-    "blurb": "Placeholder text.",
-    "link": "#"
-  },
-  {
-    "date": "2025-11",
-    "type": "Video",
-    "title": "Placeholder: In the studio with Cate Pates",
-    "outlet": "Example Channel",
-    "blurb": "Placeholder text.",
-    "link": "#"
+    "title": "Cate on The Hutt Zone",
+    "outlet": "The Hutt Zone with John MacDonald · Access Radio",
+    "blurb": "Cate talks about her work and the Lower Hutt Art Trail.",
+    "link": "https://drive.google.com/file/d/1HhSiXkjmYirXvxvegke39WGJphvyap3q/view?usp=drive_link"
   }
 ]

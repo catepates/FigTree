@@ -7,19 +7,5 @@
   ignore = '[ -n "$CACHED_COMMIT_REF" ] && [ "$CACHED_COMMIT_REF" != "$COMMIT_REF" ] && git diff --quiet "$CACHED_COMMIT_REF" "$COMMIT_REF" -- site scripts netlify coming-soon package.json package-lock.json netlify.toml'
 
 
-# Until launch, the live site (catepates.co.nz, built from main) shows only the
-# "coming soon" page in coming-soon/. Branch and preview deploys still build the full site.
-# To launch: delete this block and publish main.
-[context.production]
-  command = "echo 'Coming soon page: nothing to build'"
-  publish = "coming-soon"
-
 [build.environment]
   NODE_VERSION = "22"
-
-# Keep the site out of search engines until it's launched.
-# Remove this block (and site/robots.txt) when Cate is ready to go public.
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Robots-Tag = "noindex, nofollow"

@@ -31,7 +31,10 @@ async function exhibitions() {
   fill(document.querySelector('[data-exhibitions]'), shown.map((r) =>
     el('div', { className: 'list-item row' },
       el('span', { className: 'muted', style: 'flex: 0 0 48px', textContent: r.year || '' }),
-      el('span', { textContent: [r.title, r.venue].filter(Boolean).join(' — ') }))));
+      el('span', {},
+        // A Link column (optional) makes the title a link, e.g. to the Art Trail's own site.
+        /^https?:\/\//.test(r.link || '') ? el('a', { href: r.link, textContent: r.title }) : r.title,
+        r.venue ? ` — ${r.venue}` : ''))));
 }
 
 galleries();

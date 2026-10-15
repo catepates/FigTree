@@ -19,9 +19,25 @@ Website for ceramic artist Cate Pates (Fig Tree Studio, Lower Hutt, Wellington),
 
 ## Next steps
 
-1. Create the Google Sheet (tabs **Workshops**, **Galleries**, **Exhibitions**, **Media**, **Studio**), share it with Cate as an editor and set *Anyone with the link → Viewer*; then connect the site to it.
-2. Optional: create a Netlify build hook and save it in GitHub as `NETLIFY_BUILD_HOOK` so ORA photos can be refreshed by hand (see below).
-3. Confirm with Cate: design choice, workshop details, Wellington Artspace listing, and ask ORA about using their photos.
+### Before launch (aim: before the Lower Hutt Art Trail, 17–18 October)
+
+- [x] Netlify → Environment variables: `SHEET_ID` set for all contexts, Production included (checked 12 Oct).
+- [x] Netlify visitor access (13 Oct): preview links need the shared password (non-production only); catepates.co.nz is public but shows only the coming-soon page until launch.
+- [x] Netlify → Forms → Form notifications: email to Cate (catepatesnz@gmail.com) and Dom.
+- [ ] Cate's look at the preview site: with the shared preview password (the team invite didn't work for her). Launch waits for her approval.
+- [x] Launched 15 Oct 2026 ("Cate Approves Website Launch"): coming-soon and noindex settings removed, `main` published.
+- [x] Daily website check secrets (`ALERT_EMAIL_USER` / `ALERT_EMAIL_PASSWORD`) added in GitHub.
+- [ ] After launch run *Check the website* once with *Pretend it failed* (and once without) to test the emails.
+
+### After launch
+
+- [ ] **Gallery sources as plug-ins.** Today ORA and The Vault are handled by name in several places (build scripts, `/api/vault`, `site/js/ora.js`, the Gallery page sections, `where-to-buy.js`, the status page, the daily check). Restructure so each gallery is one file in a `galleries/` folder that only fetches its pieces (title, price, size, photo, link), picked by a **Source** column in the Galleries tab; the build, hourly live check, Gallery page sections, homepage counts, status page and daily check all loop over the sources. Adding a gallery then = one file + one Sheet value. Test against the current ORA and Vault listings so nothing changes for visitors.
+- [ ] "How Cate works" process page (`site/process.html`, drafted and hidden): add Thursday's studio photos and Cate's answers, then add it to the menu.
+- [ ] Cate's own Stripe account (public name "Cate Pates") before selling studio pieces or prints; decide on posting and update the delivery terms.
+- [ ] Prints: print and post herself, or print-on-demand.
+- [ ] **New logo (Cate, after her first workshop).** Cate wants to refine the fig tree mark. It's `site/img/fig-tree-mark.svg`, used in the site header, as the browser-tab icon and on `coming-soon/`; the social-share image `site/img/og-image.jpg` doesn't include it. A photo or scan of her drawing is enough to redraw it as SVG.
+- [ ] Domain email (hello@catepates.co.nz) when there's time; steps in the migration guide.
+- [ ] **Carry out the migration plan (Cate and Dom), before about 13 November 2026.** Move the GitHub repository, Netlify project, domain and Google files into Cate's accounts, following the migration guide. Netlify: Dom's team was upgraded to **Pro on 13 Oct 2026** (one month, paid by Dom) so Cate could join it as a team member and check the preview before launch; Pro renews monthly until cancelled. Once the project has moved to Cate's own team, put Dom's team back on the free plan (Team settings → Billing).
 
 ### Potter's stamp (maker's mark): where to get it made
 
@@ -52,6 +68,13 @@ The site uses the "Gallery" design (clean and white, Cormorant Garamond + Instru
 | About + contact form | `site/about.html` (form handled by Netlify Forms; thank-you page `site/thanks.html`) |
 
 Shared styles are in `site/css/style.css`. The site is kept out of search engines until launch (`site/robots.txt` and the header in `netlify.toml`) — remove both to go public.
+
+## Project history
+
+- **6 Oct 2026, 2:42pm:** Dom starts building the site with Claude, after sitting down with Cate at the MyHost site builder. Website building had been on Cate's to-do list for months.
+- **7 Oct:** first version in GitHub (a holding page with Cate's ORA pieces); Netlify account created; full site built (home, gallery, workshops, about).
+- **7–12 Oct:** Google Sheet control (workshops, studio, galleries, exhibitions, media, announcements); live ORA and The Vault listings; terms checked against NZ consumer law with Cate's edits; podcast player; coming-soon page on catepates.co.nz.
+- **13 Oct:** daily website health check with email alerts; Netlify Pro so Cate can see the preview; ready to launch on Cate's approval, one week after starting (64 saved versions).
 
 ## The Google Sheet
 
@@ -101,9 +124,30 @@ Until Cate is ready, catepates.co.nz (the production deploy, built from `main`) 
 
 **To launch:** delete the `[context.production]` block (and the noindex header block) in `netlify.toml`, then publish `main`.
 
+## Homepage "where to buy" list
+
+`site/js/where-to-buy.js` builds the homepage list from what's actually available: studio pieces and prints (Studio tab, unsold), then every Galleries-tab row with **Has Cate's work now** = yes, linking to its website. ORA and The Vault (matched by name) also get a live piece count (ORA's feed / `/api/vault`, else the built lists) and drop off when it's 0, so a new gallery needs only a Sheet row, no code. Empty sources are left out; with nothing anywhere the list hides and the text points to past work. Nothing on the site promises NZ-wide delivery until Cate decides on posting.
+
+## Announcements
+
+`site/js/announcements.js` (on the home, Gallery, Workshops, About and Media pages) reads the **Announcements** tab and shows each current row as a slim band under the header: Heading, Details, Label, Button text, Link, Start, End, Pages (`All pages` or home page only), Show. Rows outside Start–End (NZ time) are skipped, so an announcement disappears by itself after its End date.
+
 ## Media recordings in Google Drive
 
 On the Media page (`site/js/media.js`), an entry whose link is a Google Drive file gets a *Listen* (or *Watch*) button that opens Drive's own player (`/file/d/<id>/preview`) inside the entry, so visitors stay on the site. Other links open as before. The Drive file must be shared *Anyone with the link*.
+
+## Daily website check and email alerts
+
+`scripts/health-checks.mjs` lists everything the site needs and checks it: the main pages load, `/api/sheet` and `/api/vault` answer, the https certificate isn't about to expire, every Sheet tab can be read and still has the column headings the site uses, each upcoming workshop has a readable date and a working Humanitix link, current announcement links, media links (a Drive recording must be shared publicly), studio photos and Stripe payment links, gallery websites and exhibition links, ORA's and The Vault's lists of Cate's pieces, and Stripe's webhook secret once pieces are on sale. Each result is *ok*, *warn* (worth a look) or *fail* (visitors would notice, or bookings or sales would be lost), with a plain-words "What to do".
+
+- `/status.html` (via `/api/status`) shows the results live. Page, function and certificate checks run only on catepates.co.nz, not on Netlify preview addresses (those need a Netlify login).
+- `.github/workflows/check-site.yml` runs every morning on GitHub (free, no Netlify credits). It reads `/api/status` on the live site (`.github/scripts/check-site.mjs`). When something fails, it emails **catepatesnz@gmail.com and dom.donald@gmail.com** once, emails again if the problems change, sends a reminder after 7 days, and sends an "all fixed" email when everything passes. Warnings alone never send an email. It also keeps a GitHub issue labelled `site-health` open, mentioning @domdonald52, as the record and as a backup alert.
+- **Email setup (once):** create a Google app password for the Gmail account that sends the alerts (myaccount.google.com/apppasswords, needs 2-Step Verification). Then add two repository secrets in GitHub → Settings → Secrets and variables → Actions: `ALERT_EMAIL_USER` (that Gmail address) and `ALERT_EMAIL_PASSWORD` (the app password). Without them only the GitHub issue is created.
+- To test: Actions → *Check the website* → Run workflow → tick *Pretend it failed*; run it again unticked for the "all fixed" email. Scheduled checks only run from `main`. GitHub pauses scheduled checks in a public repository after 60 days with no commits and emails a warning first; re-enable it under Actions if that happens.
+
+## Visitor stats
+
+`site/js/stats.js` loads [GoatCounter](https://figtreestudio.goatcounter.com) (account "figtreestudio", Dom's sign-up) on every public page, but only on catepates.co.nz, so preview and local visits aren't counted. No cookies; the privacy section of the terms says what it records. The status page links to the stats. The printed QR codes add `?ref=card` (business cards), `?ref=table` (workshop table card) and `?ref=handout` (take-away cards), which GoatCounter shows under *Referrers*, so you can see how many people scanned each. Netlify's own *Observability* (raw requests, bots included, 7 days on Pro) is still there for troubleshooting.
 
 ## Gallery type filter
 
