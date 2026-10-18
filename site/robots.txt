@@ -2,3 +2,5 @@ User-agent: *
 Disallow: /status.html
 Disallow: /process.html
 Disallow: /api/
+
+Sitemap: https://catepates.co.nz/sitemap.xml
