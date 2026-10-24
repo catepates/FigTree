@@ -33,6 +33,7 @@ if (block) {
     } else {
       book.href = b.href;
       book.textContent = b.label;
+      book.dataset.track = b.track;
     }
     if (b.note) {
       note.textContent = b.note;

@@ -15,15 +15,32 @@ const { GITHUB_TOKEN, GITHUB_REPOSITORY, RUN_URL, TEST, ALERT_TO, ALERT_EMAIL_US
 const LABEL = 'site-health';
 const REMIND_DAYS = 7;
 
-// 1. Run the checks (on the live site, so they see exactly what visitors get).
-let checks;
-try {
-  const res = await fetch(new URL('/api/status', SITE), { signal: AbortSignal.timeout(30000) });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  ({ checks } = await res.json());
-  if (!Array.isArray(checks)) throw new Error('no checks in the answer');
-} catch (err) {
-  checks = [{ area: 'Website', name: 'Status check', level: 'fail', detail: `${SITE}/api/status couldn't be reached (${err.message}), so the site or its Netlify functions may be down`, fix: 'Dom: open the site, then check the latest deploy and Visitor access in Netlify.' }];
+// 1. Run the checks (on the live site, so they see exactly what visitors get). If anything
+//    fails, wait a minute and ask again, and only report what failed both times: a gallery's
+//    website having a moment (The Vault, 24 Oct 2026) shouldn't email Cate.
+const RETRY_WAIT_MS = 60_000;
+async function runChecks() {
+  try {
+    const res = await fetch(new URL('/api/status', SITE), { signal: AbortSignal.timeout(30000) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const { checks } = await res.json();
+    if (!Array.isArray(checks)) throw new Error('no checks in the answer');
+    return checks;
+  } catch (err) {
+    return [{ area: 'Website', name: 'Status check', level: 'fail', detail: `${SITE}/api/status couldn't be reached (${err.message}), so the site or its Netlify functions may be down`, fix: 'Dom: open the site, then check the latest deploy and Visitor access in Netlify.' }];
+  }
+}
+const key = (c) => `${c.area}|${c.name}`;
+let checks = await runChecks();
+if (checks.some((c) => c.level === 'fail')) {
+  const first = new Set(checks.filter((c) => c.level === 'fail').map(key));
+  console.log(`${first.size} failed; checking again in ${RETRY_WAIT_MS / 1000}s`);
+  await new Promise((r) => setTimeout(r, RETRY_WAIT_MS));
+  const again = await runChecks();
+  // Failed only on the second try: report it as a warning (no email) until it fails again tomorrow.
+  checks = again.map((c) => (c.level === 'fail' && !first.has(key(c)) ? { ...c, level: 'warn', detail: `${c.detail} (failed once, checking again tomorrow)` } : c));
+  const cleared = [...first].filter((k) => !again.some((c) => key(c) === k && c.level === 'fail'));
+  if (cleared.length) console.log(`passed on the second try (not reported): ${cleared.join(', ')}`);
 }
 if (TEST === 'true') checks.push({ area: 'Test', name: 'Pretend problem', level: 'fail', detail: 'this is a test run of the alert email', fix: 'Nothing to do: run the check again without "Pretend it failed" to see the "all fixed" email.' });
 

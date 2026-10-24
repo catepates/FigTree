@@ -8,6 +8,10 @@
 // Rows come from the Workshops tab of Cate's Google Sheet when it's connected (see sheet.js),
 // otherwise from data/workshops.json. "soldOut": true shows "Sold out" instead of the booking button.
 // A Humanitix (or Eventbrite/Eventfinda) booking link gets "Book a place" plus "Tickets through Humanitix".
+// Humanitix links get ?c=website added (unless the Sheet's link already has a code), so Cate's
+// Humanitix reports (Reports → Affiliate tracking) count bookings made from the website; the
+// code "website" has to exist on that event (Promote → Affiliate tracking).
+// Each booking button carries data-track, which stats.js counts in GoatCounter as a click.
 
 import { sheetRows, isYes } from './sheet.js';
 
@@ -38,13 +42,31 @@ export function bookingOf(w) {
   if (/^(none|no booking( needed)?|drop[ -]?in|just turn up)$/i.test(link)) return { kind: 'none', note: 'Just turn up, no booking needed' };
   if (/^https?:\/\//i.test(link)) {
     const provider = providerOf(link);
-    if (provider === 'Stripe') return { kind: 'link', href: link, label: 'Book and pay' };
+    const track = trackName(w);
+    if (provider === 'Stripe') return { kind: 'link', href: link, label: 'Book and pay', track };
     let site = provider;
     if (!site) { try { site = new URL(link).hostname.replace(/^www\./, ''); } catch { site = ''; } }
-    return { kind: 'link', href: link, label: 'Book a place', note: site ? `${provider ? 'Tickets' : 'Booking'} through ${site}` : '' };
+    const href = provider === 'Humanitix' ? withWebsiteCode(link) : link;
+    return { kind: 'link', href, label: 'Book a place', note: site ? `${provider ? 'Tickets' : 'Booking'} through ${site}` : '', track };
   }
   const about = [w.name, w.date ? dayLabel(w.date) : ''].filter(Boolean).join(', ');
-  return { kind: 'ask', href: `/about.html?workshop=${encodeURIComponent(about)}#contact`, label: 'Ask about booking' };
+  return { kind: 'ask', href: `/about.html?workshop=${encodeURIComponent(about)}#contact`, label: 'Ask about booking', track: trackName(w) };
+}
+
+// Humanitix affiliate code for bookings that start on this website.
+export function withWebsiteCode(link) {
+  try {
+    const u = new URL(link);
+    if (!u.searchParams.has('c')) u.searchParams.set('c', 'website');
+    return u.href;
+  } catch {
+    return link;
+  }
+}
+
+// GoatCounter event name for a booking button, e.g. "book/2026-11-07 Gin and Clay: magical blue tile workshop".
+function trackName(w) {
+  return `book/${w.date || ''} ${w.name || ''}`.trim();
 }
 
 export function dayLabel(iso) {
@@ -56,7 +78,11 @@ function row(w) {
   const actions = el('div', { className: 'session-actions' });
   const b = bookingOf(w);
   if (b.kind === 'sold') actions.append(el('span', { className: 'button is-disabled', textContent: b.label }));
-  else if (b.kind !== 'none') actions.append(el('a', { className: 'button', href: b.href, textContent: b.label }));
+  else if (b.kind !== 'none') {
+    const a = el('a', { className: 'button', href: b.href, textContent: b.label });
+    a.dataset.track = b.track;
+    actions.append(a);
+  }
   if (b.note) actions.append(el('span', { className: 'piece-meta', textContent: b.note }));
   if (w.details) actions.append(el('a', { href: w.details, textContent: 'Event details', style: 'padding: 8px 0; font-size: 15px' }));
 
