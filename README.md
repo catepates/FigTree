@@ -31,6 +31,11 @@ Website for ceramic artist Cate Pates (Fig Tree Studio, Lower Hutt, Wellington),
 
 ### After launch
 
+- [ ] **Next update (one deploy, about 15 credits), saved up by Dom:**
+    - [ ] Switch to Dom's preferred logo (`docs/logo-draft/fig-tree-mark-preferred.svg`, see *New logo* below), then regenerate the browser/Google icons (`site/favicon.ico`, `site/img/icon*.png|svg`, `apple-touch-icon.png`) and the print files from it.
+    - [ ] Count *Book now* clicks per workshop in GoatCounter (a click event, attached from code because the workshop cards are drawn after the page loads).
+    - [ ] Daily check: on a gallery that comes back with no pieces or an error (The Vault on 24 Oct 2026 was a one-off blip), wait about 20 seconds and try once more before reporting it (`scripts/health-checks.mjs`).
+    - [ ] Once Cate has made a Humanitix affiliate code `website` and sent the link: add it to Humanitix booking links automatically, if the code is just a parameter on the address.
 - [ ] **Gallery sources as plug-ins.** Today ORA and The Vault are handled by name in several places (build scripts, `/api/vault`, `site/js/ora.js`, the Gallery page sections, `where-to-buy.js`, the status page, the daily check). Restructure so each gallery is one file in a `galleries/` folder that only fetches its pieces (title, price, size, photo, link), picked by a **Source** column in the Galleries tab; the build, hourly live check, Gallery page sections, homepage counts, status page and daily check all loop over the sources. Adding a gallery then = one file + one Sheet value. Test against the current ORA and Vault listings so nothing changes for visitors.
 - [ ] "How Cate works" process page (`site/process.html`, drafted and hidden): add Thursday's studio photos and Cate's answers, then add it to the menu.
 - [ ] Cate's own Stripe account (public name "Cate Pates") before selling studio pieces or prints; decide on posting and update the delivery terms.
