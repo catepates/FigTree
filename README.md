@@ -126,7 +126,7 @@ On the free plan each production deploy costs 15 of the 300 monthly credits; bra
 
 ## Footer and the Netlify badge
 
-On a free Netlify team, Netlify adds a "Powered by Netlify" badge fixed to the bottom-right corner of every page. It used to cover the Instagram and Facebook icons at the right-hand end of the footer, so the footer is now a centred column (the © / Contact / Terms line, then the icons) with 72px of empty space at the bottom where the badge floats (`.site-footer` in `site/css/style.css`, "Social + footer"). The badge itself is left alone. Every page with a footer (home, Gallery, Workshops, Media, About, Terms, process) uses the same footer markup, so footer changes only need making in the stylesheet.
+On a free Netlify team, Netlify adds a "Powered by Netlify" badge fixed to the bottom-right corner of every page. It used to cover the Instagram and Facebook icons at the right-hand end of the footer, so the footer is now a centred column (the © / Contact / Terms line, then the icons) with 72px of empty space at the bottom where the badge floats (`.site-footer` in `site/css/style.css`, "Social + footer"). The badge itself is left alone. Every page with a footer (home, Gallery, Workshops, Media, About, Terms, process) uses the same footer markup and this one stylesheet, so a footer style change applies site-wide (a change to the footer text or links has to be made on each of those pages).
 
 ## Coming-soon page (live site until launch)
 
