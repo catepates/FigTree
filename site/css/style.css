@@ -139,7 +139,9 @@ blockquote.pull .attribution { font-size: 13px; letter-spacing: .14em; text-tran
 .icon-text { display: inline-flex; align-items: center; gap: 12px; padding: 8px 0; text-decoration: none; }
 .icon-text:hover span { text-decoration: underline; }
 .site-footer { border-top: 1px solid var(--line); }
-.site-footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px 32px; padding-block: 28px; font-size: 14px; color: var(--muted); }
+/* Centred column, with room at the bottom for the "Powered by Netlify" badge (fixed bottom-right) */
+.site-footer .wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; padding-top: 28px; padding-bottom: 72px; font-size: 14px; color: var(--muted); text-align: center; }
+.site-footer .social { justify-content: center; }
 .site-footer a { color: var(--ink); }
 
 /* ---------- Homepage: gallery invitation ---------- */
