@@ -80,6 +80,7 @@ Shared styles are in `site/css/style.css`. The site is kept out of search engine
 - **7 Oct:** first version in GitHub (a holding page with Cate's ORA pieces); Netlify account created; full site built (home, gallery, workshops, about).
 - **7–12 Oct:** Google Sheet control (workshops, studio, galleries, exhibitions, media, announcements); live ORA and The Vault listings; terms checked against NZ consumer law with Cate's edits; podcast player; coming-soon page on catepates.co.nz.
 - **13 Oct:** daily website health check with email alerts; Netlify Pro so Cate can see the preview; ready to launch on Cate's approval, one week after starting (64 saved versions).
+- **28 Oct:** footer centred (© line, then the Instagram and Facebook icons) with room underneath for the "Powered by Netlify" badge that the free Netlify team adds to the bottom-right of every page.
 
 ## The Google Sheet
 
@@ -122,6 +123,10 @@ On the free plan each production deploy costs 15 of the 300 monthly credits; bra
 - Changes go to `claude/cate-pates-portfolio-l2zfyj` first and show on the free preview link above.
 - When happy, merge them into `main` in one go (one pull request = one production deploy).
 - Builds are skipped automatically when only files outside the site change (e.g. this README) — see `ignore` in `netlify.toml`.
+
+## Footer and the Netlify badge
+
+On a free Netlify team, Netlify adds a "Powered by Netlify" badge fixed to the bottom-right corner of every page. It used to cover the Instagram and Facebook icons at the right-hand end of the footer, so the footer is now a centred column (the © / Contact / Terms line, then the icons) with 72px of empty space at the bottom where the badge floats (`.site-footer` in `site/css/style.css`, "Social + footer"). The badge itself is left alone. Every page with a footer (home, Gallery, Workshops, Media, About, Terms, process) uses the same footer markup and this one stylesheet, so a footer style change applies site-wide (a change to the footer text or links has to be made on each of those pages).
 
 ## Coming-soon page (live site until launch)
 
