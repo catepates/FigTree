@@ -75,6 +75,13 @@ a:hover { color: var(--green); }
 .filter-none.for-sale { padding: 40px 0 8px; }
 .gallery-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px 32px; padding: 40px 0 28px; }
 [data-vault] .gallery-head, [data-prints] .gallery-head, [data-studio]:not([hidden]):not(.is-filtered-out) + [data-ora] .gallery-head { margin-top: 48px; border-top: 1px solid var(--line); }
+/* A gallery's video: a still that opens it on Instagram, with a few words beside it */
+.gallery-video { display: flex; flex-wrap: wrap; align-items: center; gap: 24px 48px; margin-top: 56px; }
+.gallery-video-still { position: relative; display: block; flex: 0 0 auto; width: min(100%, 300px); }
+.gallery-video-still img { display: block; width: 100%; height: auto; }
+.gallery-video-still span { position: absolute; inset: 0; margin: auto; width: 72px; height: 72px; border-radius: 50%; background: rgba(28, 28, 26, .6); display: grid; place-items: center; transition: background .2s ease; }
+.gallery-video-still:hover span { background: rgba(28, 28, 26, .8); }
+.gallery-video .stack { flex: 1 1 260px; gap: 12px; max-width: 420px; }
 .live-note { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
 .live-note::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
 @media (max-width: 600px) { .section { padding-block: 64px; } }
