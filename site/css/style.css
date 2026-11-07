@@ -75,6 +75,21 @@ a:hover { color: var(--green); }
 .filter-none.for-sale { padding: 40px 0 8px; }
 .gallery-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px 32px; padding: 40px 0 28px; }
 [data-vault] .gallery-head, [data-prints] .gallery-head, [data-studio]:not([hidden]):not(.is-filtered-out) + [data-ora] .gallery-head { margin-top: 48px; border-top: 1px solid var(--line); }
+/* A gallery's videos: stills side by side that open each one on Instagram or Facebook, with a few words underneath */
+.gallery-video-head { margin-top: 48px; border-top: 1px solid var(--line); }
+.gallery-video { display: flex; flex-wrap: wrap; align-items: center; gap: 24px 48px; }
+.gallery-video-text { flex: 1 1 260px; max-width: 420px; margin: 0; font-family: var(--serif); font-size: 22px; line-height: 1.4; color: var(--body); }
+.gallery-video-text p { margin: 0; }
+.gallery-video-text p + p { margin-top: 16px; }
+.gallery-video-row { display: flex; gap: 20px; }
+.gallery-video-row figure { flex: 0 1 260px; min-width: 0; margin: 0; }
+.gallery-video-row figcaption { margin-top: 10px; font-size: 14px; color: var(--muted); }
+.gallery-video-row figcaption strong { display: block; color: var(--ink); font-weight: 600; }
+.gallery-video-still { position: relative; display: block; }
+.gallery-video-still img { display: block; width: 100%; height: auto; }
+.gallery-video-still span { position: absolute; inset: 0; margin: auto; width: 72px; height: 72px; border-radius: 50%; background: rgba(28, 28, 26, .6); display: grid; place-items: center; transition: background .2s ease; }
+.gallery-video-still:hover span { background: rgba(28, 28, 26, .8); }
+@media (max-width: 600px) { .gallery-video-row { gap: 12px; } .gallery-video-still span { width: 52px; height: 52px; } .gallery-video-text { font-size: 19px; } }
 .live-note { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
 .live-note::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
 @media (max-width: 600px) { .section { padding-block: 64px; } }
