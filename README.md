@@ -80,6 +80,9 @@ Shared styles are in `site/css/style.css`. The site is kept out of search engine
 - **7 Oct:** first version in GitHub (a holding page with Cate's ORA pieces); Netlify account created; full site built (home, gallery, workshops, about).
 - **7–12 Oct:** Google Sheet control (workshops, studio, galleries, exhibitions, media, announcements); live ORA and The Vault listings; terms checked against NZ consumer law with Cate's edits; podcast player; coming-soon page on catepates.co.nz.
 - **13 Oct:** daily website health check with email alerts; Netlify Pro so Cate can see the preview; ready to launch on Cate's approval, one week after starting (64 saved versions).
+- **28 Oct:** footer centred (© line, then the Instagram and Facebook icons) with room underneath for the "Powered by Netlify" badge that the free Netlify team adds to the bottom-right of every page.
+- **5 Nov:** Workshops page photos: the sea-window workshop as the main photo, and a row of four small photos under the intro (Bond Store workshop group, hare tile, blue bird tile, hearts). Gallery page: The Vault's two videos of Cate's hanging houses and foxes, under The Vault's pieces.
+- **14 Nov:** a third Vault video on the Gallery page (Cate's new hares and foxes, with her waxeye and bellbird vessel). Thank-you announcement for the Bond Store tile workshop (Announcements tab, until 21 Nov).
 
 ## The Google Sheet
 
@@ -93,6 +96,10 @@ Workshops, studio pieces, galleries, exhibitions and media come from one Google 
 ## Workshops
 
 Upcoming workshops come from `site/data/workshops.json` (see `site/js/workshops.js` for the fields). Workshops whose date has passed, or that have `"draft": true`, are hidden; when none are left the page shows "New dates coming soon". The two current entries are drafts until real dates, venues, prices and links are confirmed. This can later read from Cate's Google Sheet instead.
+
+### Workshop page photos
+
+The main photo is `site/img/workshop-seaview.jpg` (1100×1100, shown as a square crop). The home page still uses `workshop-group.jpg`. Under the intro text is a row of four small photos, all at the same height: `workshop-bond-store.jpg` (640×486, toned down because the original looked washed out), then `piece-hare-tile.jpg`, `piece-bird-tile.jpg` and `piece-hearts.jpg` (480×480 each). The three pieces are cut out of Cate's photos and set on the site's soft off-white (`--soft`, #F6F5F2) with the same soft drop shadow, so the different backgrounds and shadows in her originals don't show. The hare tile was also straightened, because it was turned about 1.5° in her photo. To add or change a piece, use a photo with a plain background so the cut-out stays clean, and keep it square. The markup is in `site/workshops.html` (the `display: flex` row after the intro paragraph).
 
 ## Media
 
@@ -122,6 +129,10 @@ On the free plan each production deploy costs 15 of the 300 monthly credits; bra
 - Changes go to `claude/cate-pates-portfolio-l2zfyj` first and show on the free preview link above.
 - When happy, merge them into `main` in one go (one pull request = one production deploy).
 - Builds are skipped automatically when only files outside the site change (e.g. this README) — see `ignore` in `netlify.toml`.
+
+## Footer and the Netlify badge
+
+On a free Netlify team, Netlify adds a "Powered by Netlify" badge fixed to the bottom-right corner of every page. It used to cover the Instagram and Facebook icons at the right-hand end of the footer, so the footer is now a centred column (the © / Contact / Terms line, then the icons) with 72px of empty space at the bottom where the badge floats (`.site-footer` in `site/css/style.css`, "Social + footer"). The badge itself is left alone. Every page with a footer (home, Gallery, Workshops, Media, About, Terms, process) uses the same footer markup and this one stylesheet, so a footer style change applies site-wide (a change to the footer text or links has to be made on each of those pages).
 
 ## Coming-soon page (live site until launch)
 
@@ -161,6 +172,8 @@ On the Media page (`site/js/media.js`), an entry whose link is a Google Drive fi
 ## Pieces at The Vault
 
 `scripts/fetch-vault.mjs` does the same job for The Vault (2 Plimmer Steps, Wellington) on every build: it reads Cate's artist page on thevaultnz.com and each product page, frames the photos the same way (shared code in `scripts/frame-photo.mjs`) and writes `site/data/vault.json` and `site/vault/`. The Vault's shop has no data feed the browser can read, so the Gallery page also asks `/api/vault` (`netlify/functions/vault.mjs`), which reads the artist page live. Netlify's CDN caches that for an hour for all visitors, so The Vault is read about once an hour: sold pieces drop off and new pieces appear (with The Vault's own photo until the next build). The page parsing lives in `scripts/vault-parse.mjs`, shared by the build and the function; if The Vault changes its layout, fix it there. If the page can't be read, the built list is kept and `/status.html` shows a warning.
+
+**The Vault's videos.** Under The Vault's pieces on the Gallery page, *Cate's houses, foxes and hares at The Vault* shows three of The Vault's short films side by side: the hanging houses ([Instagram reel](https://www.instagram.com/reel/DT01FGMk9pA/), a joint post with Cate's account), the foxes ([Facebook reel](https://www.facebook.com/reel/710361992108279/)) and the new hares and foxes ([Facebook reel](https://www.facebook.com/reel/4162122390744473/)). Each is a still image (`site/img/vault-reel.jpg`, `site/img/vault-fox.jpg`, `site/img/vault-hares.jpg`; the last is the reel's own public preview image) that opens the video on Instagram or Facebook, with a short line on each beside them (the `.gallery-video` block in `site/work.html`, styles in `site/css/style.css`). They aren't embedded players because the Instagram reel uses licensed music, so Instagram's embed only shows a still and "Watch on Instagram", and an embed would also bring Instagram's cookies onto a site whose privacy terms say it has none. Facebook only shows its reel to logged-in visitors, so the fox still is Cate's photo of her fox with a raven from The Vault's listing, not a frame from the video; swap in a screenshot from the video if one turns up. The block sits inside The Vault's section, so it hides when The Vault has none of Cate's pieces. If Cate or The Vault provides the original video files, they could be hosted on the site and play on the page, muted.
 
 ## Selling from the studio (Stripe payment links)
 
